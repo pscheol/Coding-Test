@@ -10,11 +10,8 @@ import java.util.Queue;
  */
 public class MiroSearchMain {
     private static int[][] table;
-    private static boolean[][] check;
     private static int[][] dist;
-    private static int[] X = {0, 0, 1, -1};
-    private static int[] Y = {1, -1, 0, 0};
-
+    final static int[][] PATH = {{0,1}, {0,-1}, {1,0}, {-1, 0}};
     public static class Edge {
         int x;
         int y;
@@ -32,7 +29,6 @@ public class MiroSearchMain {
         int m = Integer.parseInt(splitnm[1]);
 
         table = new int[n][m];
-        check = new boolean[n][m];
         dist = new int[n][m];
         for (int i = 0; i < n; i++) {
             String[] splitLine = in.readLine().split("");
@@ -48,7 +44,6 @@ public class MiroSearchMain {
     public static void bfs(int n, int m) {
         Queue<Edge> queue = new LinkedList<>();
         queue.offer(new Edge(0, 0));
-        check[0][0] = true;
         dist[0][0] = 1;
 
         while (!queue.isEmpty()) {
@@ -56,13 +51,12 @@ public class MiroSearchMain {
             int x = e.x;
             int y = e.y;
             for (int k = 0; k < 4; k++) {
-                int nx = x + X[k];
-                int ny = y + Y[k];
+                int nx = x + PATH[k][0];
+                int ny = y + PATH[k][1];
                 if (0 <= nx && n > nx && 0 <= ny && m > ny) {
-                    if (table[nx][ny] == 1 && !check[nx][ny]) {
+                    if (table[nx][ny] == 1 && dist[nx][ny] == 0) {
                         queue.offer(new Edge(nx, ny));
                         dist[nx][ny] = dist[x][y] + 1;
-                        check[nx][ny] = true;
                     }
                 }
             }
