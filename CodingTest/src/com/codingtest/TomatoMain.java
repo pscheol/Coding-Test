@@ -1,51 +1,54 @@
 package com.codingtest;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.Scanner;
 
 /**
  * 7576 : 토마토
  */
 public class TomatoMain {
-    private static int[] X = {0, 0, 1, -1};
-    private static int[] Y = {1, -1, 0, 0};
-    static int[][] table;
-    static int[][] dist;
+    public static final int[][] PATH = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+    public static int[][] table;
+    public static int[][] dist;
 
     public static class Edge {
         int x;
         int y;
 
-        Edge(int x, int y) {
+        public Edge(int x, int y) {
             this.x = x;
             this.y = y;
         }
     }
 
-    public static void main(String[] args) {
-        Scanner scan = new Scanner(System.in);
-        int m = scan.nextInt();
-        int n = scan.nextInt();
+    public static void main(String[] args) throws Exception {
+        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+        String[] MNLine = in.readLine().split(" ");
+        int m = Integer.parseInt(MNLine[0]);
+        int n = Integer.parseInt(MNLine[1]);
         table = new int[n][m];
         dist = new int[n][m];
 
         Queue<Edge> queue = new LinkedList<>();
         for (int i = 0; i < n; i++) {
+            String[] split = in.readLine().split(" ");
             for (int j = 0; j < m; j++) {
-                table[i][j] = scan.nextInt();
+                int v = Integer.parseInt(split[j]);
+                table[i][j] = v;
                 dist[i][j] = -1;
-                if (table[i][j] == 1) {
-                    queue.add(new Edge(i, j));
+                if (v == 1) {
                     dist[i][j] = 0;
+                    queue.offer(new Edge(i, j));
                 }
             }
         }
-
+        in.close();
 
         bfs(queue, n, m);
 
-        int result = 0;
+        int result = -1;
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < m; j++) {
                 if (result < dist[i][j]) {
@@ -65,13 +68,13 @@ public class TomatoMain {
             Edge e = queue.poll();
             int x = e.x;
             int y = e.y;
-            for (int i = 0; i < 4; i++) {
-                int nx = x + X[i];
-                int ny = y + Y[i];
-                if (0 <= nx && nx < n && 0 <= ny && m > ny) {
-                    if (table[nx][ny] == 0 && dist[nx][ny] == -1) {
-                        queue.offer(new Edge(nx, ny));
+            for (int k = 0; k < 4; k++) {
+                int nx = x + PATH[k][0];
+                int ny = y + PATH[k][1];
+                if (0 <= nx && nx < n && 0 <= ny && ny < m) {
+                    if (table[nx][ny] != -1 && dist[nx][ny] == -1) {
                         dist[nx][ny] = dist[x][y] + 1;
+                        queue.offer(new Edge(nx, ny));
                     }
                 }
             }

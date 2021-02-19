@@ -38,6 +38,12 @@ public class MiroSearchMain {
         }
         bfs(n, m);
         System.out.println(dist[n - 1][m - 1]);
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                System.out.printf("%2d ", dist[i][j]);
+            }
+            System.out.println();
+        }
         in.close();
     }
 
